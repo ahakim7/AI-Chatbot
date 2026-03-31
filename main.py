@@ -1,31 +1,35 @@
-# 👉 ADD THIS AT THE VERY TOP (before everything else)
-
 import os
 from dotenv import load_dotenv
 
+# Load environment variables
 load_dotenv()
-from fastapi import FastAPI, UploadFile, File, Form
+
+from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
-import shutil
 
 from chatbot.llm import chat
 from chatbot.translate import detect_lang, translate_to_en, translate_back
 from chatbot.memory import load_memory, save_memory
-from chatbot.speech import speech_to_text, text_to_speech
-from chatbot.vision import analyze_image
 
 app = FastAPI()
 
+# Serve frontend
 app.mount("/static", StaticFiles(directory="static"), name="static")
-app.mount("/audio", StaticFiles(directory="."), name="audio")
 
+# Load memory
 messages = load_memory()
 
+# System prompt
 SYSTEM = {
     "role": "system",
-    "content": "Always reply in the same language as the user."
+    "content": "Always reply in the same language as the user. Default to English if unclear."
 }
+
+# Ensure system message exists once
+if not messages or messages[0]["role"] != "system":
+    messages.insert(0, SYSTEM)
+
 
 @app.get("/")
 def home():
@@ -36,97 +40,35 @@ def home():
 def chat_api(user_input: str):
     global messages
 
-    print("✅ USER INPUT:", user_input)
-
-    lang = detect_lang(user_input)
-    print("🌍 DETECTED LANG:", lang)
-
-    text_en = translate_to_en(user_input, lang)
-    print("🔤 TRANSLATED TO EN:", text_en)
-
-    messages.append({"role": "user", "content": text_en})
-    print("📦 MESSAGES:", messages)
-
-    # 👇 MOST LIKELY ERROR HERE
-    reply = chat(messages)
-    print("🤖 RAW REPLY:", reply)
-
-    messages.append({"role": "assistant", "content": reply})
-    save_memory(messages)
-
-    final = reply if lang == "en" else translate_back(reply, lang)
-    print("✅ FINAL RESPONSE:", final)
-
-    return {"response": final}
-
-
-@app.post("/image-upload")
-async def image_upload(file: UploadFile = File(None), question: str = Form("")):
-    if not file:
-        return {"response": "No image provided."}
-
-    path = "uploaded.jpg"
-
-    with open(path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
-
-    result = analyze_image(path, question)
-    return {"response": result}
-
-
-@app.post("/audio")
-async def audio_api(file: UploadFile = File(...)):
     try:
-        with open("audio.wav", "wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
+        print("✅ USER INPUT:", user_input)
 
-        print("Audio saved")
+        # Detect language
+        lang = detect_lang(user_input)
+        print("🌍 DETECTED LANG:", lang)
 
-        # 🎤 Speech → Text
-        text = speech_to_text("audio.wav")
-        print("Transcribed:", text)
+        # Translate to English
+        text_en = translate_to_en(user_input, lang)
+        print("🔤 TRANSLATED:", text_en)
 
-        if not text or text.strip() == "":
-            return {
-                "user_text": "",
-                "response_text": "❌ No speech detected",
-                "audio_file": ""
-            }
-
-        lang = detect_lang(text)
-        text_en = translate_to_en(text, lang)
-
-        global messages
+        # Add user message
         messages.append({"role": "user", "content": text_en})
 
-        # 🤖 AI
+        # Get AI response
         reply = chat(messages)
-        print("AI reply:", reply)
+        print("🤖 RAW REPLY:", reply)
 
+        # Save response
         messages.append({"role": "assistant", "content": reply})
         save_memory(messages)
 
+        # Translate back if needed
         final = reply if lang == "en" else translate_back(reply, lang)
 
-        # 🔊 TTS
-        try:
-            audio_path = text_to_speech(final, lang)
-            print("Audio file:", audio_path)
-            audio_url = f"/audio/{audio_path}"
-        except Exception as e:
-            print("TTS error:", e)
-            audio_url = ""
+        print("✅ FINAL:", final)
 
-        return {
-            "user_text": text,
-            "response_text": final,
-            "audio_file": audio_url
-        }
+        return {"response": final}
 
     except Exception as e:
-        print("🔥 FULL ERROR:", e)
-        return {
-            "user_text": "",
-            "response_text": "❌ Voice processing failed",
-            "audio_file": ""
-        }
+        print("🔥 ERROR:", e)
+        return {"response": "❌ Server error. Please try again."}
