@@ -54,6 +54,9 @@ def chat_api(user_input: str):
         # Add user message
         messages.append({"role": "user", "content": text_en})
 
+        # 🔥 LIMIT MEMORY HERE
+        messages = messages[-10:]
+
         # Get AI response
         reply = chat(messages)
         print("🤖 RAW REPLY:", reply)
