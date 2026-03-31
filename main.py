@@ -1,3 +1,9 @@
+# 👉 ADD THIS AT THE VERY TOP (before everything else)
+
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -30,16 +36,26 @@ def home():
 def chat_api(user_input: str):
     global messages
 
+    print("✅ USER INPUT:", user_input)
+
     lang = detect_lang(user_input)
+    print("🌍 DETECTED LANG:", lang)
+
     text_en = translate_to_en(user_input, lang)
+    print("🔤 TRANSLATED TO EN:", text_en)
 
     messages.append({"role": "user", "content": text_en})
+    print("📦 MESSAGES:", messages)
+
+    # 👇 MOST LIKELY ERROR HERE
     reply = chat(messages)
+    print("🤖 RAW REPLY:", reply)
 
     messages.append({"role": "assistant", "content": reply})
     save_memory(messages)
 
     final = reply if lang == "en" else translate_back(reply, lang)
+    print("✅ FINAL RESPONSE:", final)
 
     return {"response": final}
 
