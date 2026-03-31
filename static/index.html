@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Chatbot</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="app">
+
+  <div class="sidebar">
+    <h3>Chats</h3>
+    <button onclick="location.reload()">+ New Chat</button>
+  </div>
+
+  <div class="main">
+    <div id="chat-box"></div>
+
+    <div class="input-area">
+      <input id="input" placeholder="Send a message..." autocomplete="off" />
+
+      <input type="file" id="imageInput" style="display:none" />
+
+      <button onclick="document.getElementById('imageInput').click()">📎</button>
+      <button id="micBtn" onclick="toggleRecording()">🎤 Start</button>
+      <button onclick="send()">➤</button>
+    </div>
+
+    <div id="imagePreviewContainer"></div>
+
+  </div>
+
+</div>
+
+<script src="/static/script.js"></script>
+</body>
+</html>
