@@ -1,30 +1,36 @@
-# 🤖 Multimodal AI Chatbot
+# 🤖 Multimodal AI Chatbot (Live)
 
-A full-stack **multimodal AI chatbot** built with FastAPI that supports **text, voice, and image interactions**. This project integrates advanced AI capabilities including speech recognition, text-to-speech, image understanding, multilingual translation, and conversational memory.
+🚀 **Live Demo:**
+https://ai-chatbot-ney5.onrender.com/
+
+---
+
+## 📌 Overview
+
+This is a **full-stack AI chatbot** deployed on the cloud, capable of handling natural conversations with multilingual support and contextual memory.
+
+The project demonstrates real-world AI integration, backend development, and deployment practices.
 
 ---
 
 ## 🚀 Features
 
-* 💬 **Conversational AI** – Natural language responses using OpenAI LLM
-* 🎤 **Speech-to-Text** – Convert voice input into text (Whisper)
-* 🔊 **Text-to-Speech** – AI-generated voice responses
-* 🖼️ **Image Understanding** – Upload images and ask questions about them
-* 🌍 **Multilingual Support** – English, Bengali, Finnish (auto-detection + translation)
-* 🧠 **Conversation Memory** – Stores and recalls chat history
-* ⚡ **FastAPI Backend** – High-performance API system
-* 🌐 **Web Interface** – Interactive frontend (HTML/CSS/JS)
+* 💬 Conversational AI using OpenAI (GPT-4o-mini)
+* 🌍 Multilingual support (English, Bengali, Finnish)
+* 🧠 Context-aware chat with memory optimization
+* ⚡ FastAPI backend
+* 🌐 Live deployment on Render
+* 🔐 Secure API key handling using environment variables
 
 ---
 
 ## 🛠️ Tech Stack
 
 * **Backend:** FastAPI (Python)
-* **AI Models:** OpenAI API (GPT-4o-mini)
-* **Speech:** Whisper (STT), TTS engine
-* **Translation:** Custom translation module
+* **AI Model:** OpenAI API
 * **Frontend:** HTML, CSS, JavaScript
-* **Other:** dotenv, file handling, REST APIs
+* **Deployment:** Render
+* **Other:** dotenv, langdetect, deep-translator
 
 ---
 
@@ -34,9 +40,7 @@ A full-stack **multimodal AI chatbot** built with FastAPI that supports **text, 
 Chatbot/
 │── chatbot/
 │   ├── llm.py
-│   ├── speech.py
 │   ├── translate.py
-│   ├── vision.py
 │   ├── memory.py
 │
 │── static/
@@ -45,16 +49,16 @@ Chatbot/
 │   ├── style.css
 │
 │── main.py
-│── .env (not included)
+│── requirements.txt
 │── .gitignore
 │── README.md
 ```
 
 ---
 
-## ⚙️ Setup Instructions
+## ⚙️ Setup (Local)
 
-### 1️⃣ Clone the repository
+### 1. Clone the repo
 
 ```
 git clone https://github.com/ahakim7/AI-Chatbot.git
@@ -63,16 +67,16 @@ cd AI-Chatbot
 
 ---
 
-### 2️⃣ Create virtual environment
+### 2. Create virtual environment
 
 ```
 python -m venv .venv
-.venv\Scripts\activate   (Windows)
+.venv\Scripts\activate
 ```
 
 ---
 
-### 3️⃣ Install dependencies
+### 3. Install dependencies
 
 ```
 pip install -r requirements.txt
@@ -80,9 +84,9 @@ pip install -r requirements.txt
 
 ---
 
-### 4️⃣ Set environment variables
+### 4. Add environment variables
 
-Create a `.env` file in the root directory:
+Create `.env` file:
 
 ```
 OPENAI_API_KEY=your_api_key_here
@@ -90,43 +94,54 @@ OPENAI_API_KEY=your_api_key_here
 
 ---
 
-### 5️⃣ Run the application
+### 5. Run the app
 
 ```
 uvicorn main:app --reload
 ```
 
-Open in browser:
-
-```
-http://127.0.0.1:8000
-```
-
 ---
 
-## 🎮 How to Use
+## 🌍 Deployment
 
-* 💬 Type messages to chat with the AI
-* 🎤 Use voice input for speech interaction
-* 🖼️ Upload images and ask questions
-* 🌍 Chat in multiple languages
+This project is deployed on Render using:
+
+* Build Command:
+
+```
+pip install -r requirements.txt
+```
+
+* Start Command:
+
+```
+uvicorn main:app --host 0.0.0.0 --port 10000
+```
 
 ---
 
 ## 🔐 Security
 
-* API keys are stored securely using `.env`
-* `.env` is excluded from version control via `.gitignore`
+* API keys are stored securely using environment variables
+* `.env` is excluded via `.gitignore`
 
 ---
 
-## 🎯 Future Improvements
+## 🎯 Key Learnings
 
-* 🌍 Deploy to cloud (Render / Railway)
+* Handling API authentication errors
+* Debugging backend systems
+* Managing dependencies for cloud deployment
+* Optimizing chatbot memory and performance
+
+---
+
+## 🚀 Future Improvements
+
+* 🎤 Voice interaction (cloud-compatible)
+* 🖼️ Image understanding (optimized deployment)
 * ⚡ Streaming responses (real-time typing)
-* 🧠 Vector database (RAG memory)
-* 🎨 Modern frontend (React)
-* 📱 Mobile-friendly UI
+* 🎨 Improved UI/UX
 
 ---
 
