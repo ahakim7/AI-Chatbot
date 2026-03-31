@@ -14,7 +14,7 @@ if not api_key:
 
 # Initialize client
 client = OpenAI(api_key=api_key)
-print("API KEY LOADED:", os.getenv("OPENAI_API_KEY"))
+
 
 
 def chat(messages):
